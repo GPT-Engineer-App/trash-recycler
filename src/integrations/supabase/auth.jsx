@@ -1,22 +1,20 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { supabase, SupabaseProvider } from './index.js';
+import { CodehooksProvider } from './index.js';
 import { useQueryClient } from '@tanstack/react-query';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
 
-const SupabaseAuthContext = createContext();
+const CodehooksAuthContext = createContext();
 
-export const SupabaseAuthProvider = ({ children }) => {
+export const CodehooksAuthProvider = ({ children }) => {
   return (
-    <SupabaseProvider>
-      <SupabaseAuthProviderInner>
+    <CodehooksProvider>
+      <CodehooksAuthProviderInner>
         {children}
-      </SupabaseAuthProviderInner>
-    </SupabaseProvider>
+      </CodehooksAuthProviderInner>
+    </CodehooksProvider>
   );
 }
 
-export const SupabaseAuthProviderInner = ({ children }) => {
+export const CodehooksAuthProviderInner = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
@@ -24,47 +22,38 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   useEffect(() => {
     const getSession = async () => {
       setLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
+      // Implement session retrieval logic here
+      setSession(null); // Replace with actual session data
       setLoading(false);
     };
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-      queryClient.invalidateQueries('user');
-    });
 
     getSession();
 
     return () => {
-      authListener.subscription.unsubscribe();
       setLoading(false);
     };
   }, [queryClient]);
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    // Implement logout logic here
     setSession(null);
     queryClient.invalidateQueries('user');
     setLoading(false);
   };
 
   return (
-    <SupabaseAuthContext.Provider value={{ session, loading, logout }}>
+    <CodehooksAuthContext.Provider value={{ session, loading, logout }}>
       {children}
-    </SupabaseAuthContext.Provider>
+    </CodehooksAuthContext.Provider>
   );
 };
 
-export const useSupabaseAuth = () => {
-  return useContext(SupabaseAuthContext);
+export const useCodehooksAuth = () => {
+  return useContext(CodehooksAuthContext);
 };
 
-export const SupabaseAuthUI = () => (
-  <Auth
-    supabaseClient={supabase}
-    appearance={{ theme: ThemeSupa }}
-    theme="default"
-    providers={[]}
-  />
+export const CodehooksAuthUI = () => (
+  <div>
+    {/* Implement authentication UI here */}
+  </div>
 );
