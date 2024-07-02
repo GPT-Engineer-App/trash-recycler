@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useSettings } from "@/contexts/SettingsContext";
 import SimplePeer from "simple-peer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const LiveView = () => {
+  const { settings } = useSettings();
   const videoRef = useRef(null);
   const [error, setError] = useState(null);
   const [peer, setPeer] = useState(null);

@@ -1,25 +1,23 @@
 import { useState } from "react";
+import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TalliesAndSettings = () => {
-  const [settings, setSettings] = useState({
-    brightness: 50,
-    quality: 720,
-    fps: 30,
-  });
+  const { settings, updateSettings } = useSettings();
+  const [localSettings, setLocalSettings] = useState(settings);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSettings((prevSettings) => ({
+    setLocalSettings((prevSettings) => ({
       ...prevSettings,
       [name]: value,
     }));
   };
 
   const handleReset = () => {
-    setSettings({
+    setLocalSettings({
       brightness: 50,
       quality: 720,
       fps: 30,
@@ -29,6 +27,10 @@ const TalliesAndSettings = () => {
   const handlePushTallies = () => {
     // Placeholder for pushing/updating tallies and moving values to historical tracking data
     console.log("Tallies pushed/updated");
+  };
+
+  const handleSaveSettings = () => {
+    updateSettings(localSettings);
   };
 
   return (
@@ -59,7 +61,7 @@ const TalliesAndSettings = () => {
                 name="brightness"
                 min="0"
                 max="100"
-                value={settings.brightness}
+                value={localSettings.brightness}
                 onChange={handleInputChange}
               />
             </div>
@@ -69,7 +71,7 @@ const TalliesAndSettings = () => {
                 type="number"
                 id="quality"
                 name="quality"
-                value={settings.quality}
+                value={localSettings.quality}
                 onChange={handleInputChange}
               />
             </div>
@@ -79,11 +81,11 @@ const TalliesAndSettings = () => {
                 type="number"
                 id="fps"
                 name="fps"
-                value={settings.fps}
+                value={localSettings.fps}
                 onChange={handleInputChange}
               />
             </div>
-            <Button variant="primary" className="mr-2">Save Settings</Button>
+            <Button variant="primary" className="mr-2" onClick={handleSaveSettings}>Save Settings</Button>
             <Button variant="secondary" onClick={handleReset}>Reset</Button>
           </CardContent>
         </Card>

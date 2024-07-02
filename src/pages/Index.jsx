@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useSettings } from "@/contexts/SettingsContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Index = () => {
   const [mode, setMode] = useState("");
   const navigate = useNavigate();
+
+  const { settings, updateSettings } = useSettings();
 
   const handleContinue = () => {
     if (mode) {
