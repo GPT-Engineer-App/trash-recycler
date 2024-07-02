@@ -7,6 +7,7 @@ import Layout from "./layouts/sidebar"; // Use the sidebar layout
 import Index from "./pages/Index.jsx";
 import LiveView from "./pages/LiveView.jsx";
 import TalliesAndSettings from "./pages/TalliesAndSettings.jsx";
+import { SettingsProvider } from "./contexts/SettingsContext";
 
 const queryClient = new QueryClient();
 
@@ -33,15 +34,17 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Index />} />
-              <Route path="live-view" element={<LiveView />} />
-              <Route path="tallies-settings" element={<TalliesAndSettings />} />
-            </Route>
-          </Routes>
-        </Router>
+        <SettingsProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Index />} />
+                <Route path="live-view" element={<LiveView />} />
+                <Route path="tallies-settings" element={<TalliesAndSettings />} />
+              </Route>
+            </Routes>
+          </Router>
+        </SettingsProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
