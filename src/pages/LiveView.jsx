@@ -7,19 +7,19 @@ const LiveView = () => {
 
   useEffect(() => {
     if (videoRef.current) {
-      navigator.mediaDevices.getUserMedia({ video: true })
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then((stream) => {
           videoRef.current.srcObject = stream;
         })
         .catch((error) => {
           if (error.name === "NotAllowedError") {
-            setError("Webcam access denied. Please grant permission.");
+            setError("Camera access denied. Please grant permission.");
           } else if (error.name === "NotFoundError" || error.name === "NotReadableError") {
-            setError("Webcam not found or unavailable.");
+            setError("Camera not found or unavailable.");
           } else if (error.name === "NotReadableError") {
-            setError("Webcam is currently in use by another application.");
+            setError("Camera is currently in use by another application.");
           } else {
-            setError("Error accessing webcam: " + error.message);
+            setError("Error accessing camera: " + error.message);
           }
         });
     }
