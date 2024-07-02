@@ -1,9 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Index = () => {
   const [mode, setMode] = useState("");
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    if (mode) {
+      navigate(`/${mode}`);
+    }
+  };
 
   return (
     <div className="text-center">
@@ -14,11 +22,11 @@ const Index = () => {
           <SelectValue placeholder="Select Mode" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="object-detection">Object Detection</SelectItem>
-          <SelectItem value="roi-monitoring">ROI Monitoring</SelectItem>
+          <SelectItem value="live-view">Live View</SelectItem>
+          <SelectItem value="tallies-settings">Tallies & Settings</SelectItem>
         </SelectContent>
       </Select>
-      <Button variant="primary" disabled={!mode} onClick={() => console.log(`Selected mode: ${mode}`)}>
+      <Button variant="primary" disabled={!mode} onClick={handleContinue}>
         Continue
       </Button>
     </div>
