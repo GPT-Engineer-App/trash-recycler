@@ -18,6 +18,19 @@ const TalliesAndSettings = () => {
     }));
   };
 
+  const handleReset = () => {
+    setSettings({
+      brightness: 50,
+      quality: 720,
+      fps: 30,
+    });
+  };
+
+  const handlePushTallies = () => {
+    // Placeholder for pushing/updating tallies and moving values to historical tracking data
+    console.log("Tallies pushed/updated");
+  };
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl mb-4">Tallies & Settings</h1>
@@ -30,7 +43,7 @@ const TalliesAndSettings = () => {
             <p>Week: 100</p>
             <p>Month: 400</p>
             <p>Year-to-Date: 5000</p>
-            <Button variant="outline" className="mt-4">Download Results</Button>
+            <Button variant="outline" className="mt-4" onClick={handlePushTallies}>Push/Update Tallies</Button>
           </CardContent>
         </Card>
         <Card>
@@ -70,7 +83,8 @@ const TalliesAndSettings = () => {
                 onChange={handleInputChange}
               />
             </div>
-            <Button variant="primary">Save Settings</Button>
+            <Button variant="primary" className="mr-2">Save Settings</Button>
+            <Button variant="secondary" onClick={handleReset}>Reset</Button>
           </CardContent>
         </Card>
       </div>
