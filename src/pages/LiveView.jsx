@@ -10,42 +10,46 @@ const LiveView = () => {
   const [peer, setPeer] = useState(null);
 
   useEffect(() => {
+    const handleStream = (stream) => {
+      videoRef.current.srcObject = stream;
+      const newPeer = new SimplePeer({
+        initiator: window.location.hash === '#init',
+        trickle: false,
+        stream: stream,
+      });
+
+      newPeer.on('signal', data => {
+        // Send signal data to the server or peer
+        console.log('SIGNAL', JSON.stringify(data));
+      });
+
+      newPeer.on('stream', stream => {
+        // Got remote video stream, now let's show it in a video tag
+        const remoteVideo = document.createElement('video');
+        document.body.appendChild(remoteVideo);
+        remoteVideo.srcObject = stream;
+        remoteVideo.play();
+      });
+
+      setPeer(newPeer);
+    };
+
+    const handleError = (error) => {
+      if (error.name === "NotAllowedError") {
+        setError("Camera access denied. Please grant permission.");
+      } else if (error.name === "NotFoundError" || error.name === "NotReadableError") {
+        setError("Camera not found or unavailable.");
+      } else if (error.name === "NotReadableError") {
+        setError("Camera is currently in use by another application.");
+      } else {
+        setError("Error accessing camera: " + error.message);
+      }
+    };
+
     if (videoRef.current) {
       navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true })
-        .then((stream) => {
-          videoRef.current.srcObject = stream;
-          const newPeer = new SimplePeer({
-            initiator: window.location.hash === '#init',
-            trickle: false,
-            stream: stream,
-          });
-
-          newPeer.on('signal', data => {
-            // Send signal data to the server or peer
-            console.log('SIGNAL', JSON.stringify(data));
-          });
-
-          newPeer.on('stream', stream => {
-            // Got remote video stream, now let's show it in a video tag
-            const remoteVideo = document.createElement('video');
-            document.body.appendChild(remoteVideo);
-            remoteVideo.srcObject = stream;
-            remoteVideo.play();
-          });
-
-          setPeer(newPeer);
-        })
-        .catch((error) => {
-          if (error.name === "NotAllowedError") {
-            setError("Camera access denied. Please grant permission.");
-          } else if (error.name === "NotFoundError" || error.name === "NotReadableError") {
-            setError("Camera not found or unavailable.");
-          } else if (error.name === "NotReadableError") {
-            setError("Camera is currently in use by another application.");
-          } else {
-            setError("Error accessing camera: " + error.message);
-          }
-        });
+        .then(handleStream)
+        .catch(handleError);
     }
   }, []);
 
